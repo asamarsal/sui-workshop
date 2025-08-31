@@ -1,5 +1,4 @@
 # sui-workshop
-Project for sui workshop with blockdev.id
 
 Project untuk **Sui Workshop** yang difasilitasi [blockdev.id](https://blockdev.id).  
 
