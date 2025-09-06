@@ -18,7 +18,7 @@ This project is for **Sui Workshop** that facilitated from [blockdev.id](https:/
 </details>
 
 ### Tamagosui
-https://raw.githubusercontent.com/asamarsal/sui-workshop/refs/heads/main/day%202/image/sui-cover.PNG
+![Sui Cover](https://raw.githubusercontent.com/asamarsal/sui-workshop/refs/heads/main/day%202/image/sui-cover.PNG)
 
 <details>
   <summary>Day 2</summary>
