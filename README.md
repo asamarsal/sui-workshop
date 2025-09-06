@@ -17,11 +17,11 @@ This project is for **Sui Workshop** that facilitated from [blockdev.id](https:/
     
 </details>
 
-### Tamagosui
-![Sui Cover](https://raw.githubusercontent.com/asamarsal/sui-workshop/refs/heads/main/day%202/image/sui-cover.PNG)
-
 <details>
   <summary>Day 2</summary>
+
+  ### Tamagosui
+  ![Sui Cover](https://raw.githubusercontent.com/asamarsal/sui-workshop/refs/heads/main/day%202/image/sui-cover.PNG)
     
     Git from : https://github.com/rifuki/tamagosui
 
