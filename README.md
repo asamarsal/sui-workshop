@@ -1,12 +1,28 @@
 # sui-workshop
 
-Project untuk **Sui Workshop** yang difasilitasi [blockdev.id](https://blockdev.id).  
+This project is for **Sui Workshop** that facilitated from [blockdev.id](https://blockdev.id).  
 
 ---
 
-## 🚀 Overview
-Project ini mempelajari:
-- Cara membangun smart contract menggunakan **Move**.
-- **build** dan **publish** paket di jaringan **Sui**.
-- Memanggil fungsi (`sui client call`) dari modul Move yang sudah dipublish.
-- Eksperimen langsung dengan **Sui CLI** dan best practice pengelolaan package.
+<details>
+    <summary>Day 1</summary>
+
+    Docs : https://docs-sui.vercel.app/docs/day1/module1-intro-to-sui
+
+    This project learn about:
+    - How to make smart contract with **Move**.
+    - **build** and **publish** package in **Sui** blockchain.
+    - Function call (`sui client call`) from Move module that published.
+    - Live experiment with **Sui CLI** and best practice package management.
+    
+</details>
+
+<details>
+  <summary>Day 2</summary>
+
+    Git from : https://github.com/rifuki/tamagosui
+
+    - Making of tamagosui smart contract
+    - Clone project from UI
+
+</details>
