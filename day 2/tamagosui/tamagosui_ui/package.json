@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mysten/bcs": "^1.7.0",
     "@mysten/dapp-kit": "^0.17.7",
     "@mysten/sui": "^1.37.6",
     "@radix-ui/react-progress": "^1.1.7",
