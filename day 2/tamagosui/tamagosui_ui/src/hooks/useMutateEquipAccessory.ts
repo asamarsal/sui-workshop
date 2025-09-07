@@ -17,6 +17,7 @@ const mutateKeyEquipAccessory = ["mutate", "equip-accessory"];
 type UseMutateEquipAccessory = {
   petId: string;
   accessoryId: string;
+  slot: "head" | "neck" | "eyes";
 };
 
 export function UseMutateEquipAccessory() {
@@ -27,13 +28,13 @@ export function UseMutateEquipAccessory() {
 
   return useMutation({
     mutationKey: mutateKeyEquipAccessory,
-    mutationFn: async ({ petId, accessoryId }: UseMutateEquipAccessory) => {
+    mutationFn: async ({ petId, accessoryId, slot }: UseMutateEquipAccessory) => {
       if (!currentAccount) throw new Error("No connected account");
 
       const tx = new Transaction();
       tx.moveCall({
         target: `${PACKAGE_ID}::${MODULE_NAME}::equip_accessory`,
-        arguments: [tx.object(petId), tx.object(accessoryId)],
+        arguments: [tx.object(petId), tx.object(accessoryId), tx.pure.string(slot),],
       });
 
       const { digest } = await signAndExecute({ transaction: tx });

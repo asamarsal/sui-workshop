@@ -12,6 +12,7 @@ import { MODULE_NAME, PACKAGE_ID } from "@/constants/contract";
 import { queryKeyOwnedAccessories } from "./useQueryOwnedAccessories";
 
 const mutateKeyMintAccessory = ["mutate", "mint-accessory"];
+type MintAccessoryType = "blangkon" | "necklace" | "glasses";
 
 export function useMutateMintAccessory() {
   const currentAccount = useCurrentAccount();
@@ -21,12 +22,13 @@ export function useMutateMintAccessory() {
 
   return useMutation({
     mutationKey: mutateKeyMintAccessory,
-    mutationFn: async () => {
+    mutationFn: async (accessoryType: MintAccessoryType = "glasses") => {
       if (!currentAccount) throw new Error("No connected account");
 
       const tx = new Transaction();
       tx.moveCall({
         target: `${PACKAGE_ID}::${MODULE_NAME}::mint_accessory`,
+        arguments: [tx.pure.string(accessoryType)],
       });
 
       const { digest } = await signAndExecute({ transaction: tx });

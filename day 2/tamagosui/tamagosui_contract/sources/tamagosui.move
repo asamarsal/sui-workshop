@@ -26,14 +26,26 @@ const E_PET_IS_ALREADY_ASLEEP: u64 = 109;
 // === Constants ===
 const PET_LEVEL_1_IMAGE_URL: vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreidkhjpthergw2tcg6u5r344shgi2cdg5afmhgpf5bv34vqfrr7hni";
 const PET_LEVEL_1_IMAGE_WITH_GLASSES_URL: vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreibizappmcjaq5a5metl27yc46co4kxewigq6zu22vovwvn5qfsbiu";
+const PET_LEVEL_1_IMAGE_WITH_BLANGKON_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/lv1-blangkon.png";
+const PET_LEVEL_1_IMAGE_WITH_NECKLACE_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/lv1-necklace.png";
+const PET_LEVEL_1_IMAGE_WITH_BLANGKON_NECKLACE_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/lv1-blangkon-necklace.png";
+const PET_LEVEL_1_IMAGE_WITH_BLANGKON_GLASSES_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/lv1-blangkon-sunglasses.png";
+const PET_LEVEL_1_IMAGE_WITH_NECKLACE_GLASSES_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/lv1-blangkon-sunglasses.png";
+const PET_LEVEL_1_IMAGE_WITH_BLANGKON_NECKLACE_GLASSES_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/lv1-blangkon-necklace-sunglasses.png";
+
 const PET_LEVEL_2_IMAGE_URL: vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreia5tgsowzfu6mzjfcxagfpbkghfuho6y5ybetxh3wabwrc5ajmlpq";
 const PET_LEVEL_2_IMAGE_WITH_GLASSES_URL:vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreif5bkpnqyybq3aqgafqm72x4wfjwcuxk33vvykx44weqzuilop424";
 const PET_LEVEL_3_IMAGE_URL: vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreidnqerfwxuxkrdsztgflmg5jwuespdkrazl6qmk7ykfgmrfzvinoy";
 const PET_LEVEL_3_IMAGE_WITH_GLASSES_URL:vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreigs6r3rdupoji7pqmpwe76z7wysguzdlq43t3wqmzi2654ux5n6uu";
 const PET_SLEEP_IMAGE_URL: vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreihwofl5stihtzjixfhrtznd7zqkclfhmlshgsg7cbszzjqqpvf7ae";
 const ACCESSORY_GLASSES_IMAGE_URL: vector<u8> = b"https://tan-kind-lizard-741.mypinata.cloud/ipfs/bafkreigyivmq45od3jkryryi3w6t5j65hcnfh5kgwpi2ex7llf2i6se7de";
+const ACCESSORY_BLANGKON_IMAGE_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/blangkon.png";
+const ACCESSORY_NECKLACE_IMAGE_URL: vector<u8> = b"https://rose-ideal-chimpanzee-563.mypinata.cloud/ipfs/bafybeiajhtpnwfxjvvd3swqzoyau6rt3pobrbcr6rogwohwh5rwlipejhe/necklace.png";
 
-const EQUIPPED_ITEM_KEY: vector<u8> = b"equipped_item";
+const EQUIPPED_HEAD_KEY: vector<u8> = b"equipped_head";
+const EQUIPPED_NECK_KEY: vector<u8> = b"equipped_neck";
+const EQUIPPED_EYES_KEY: vector<u8> = b"equipped_eyes";
+
 const SLEEP_STARTED_AT_KEY: vector<u8> = b"sleep_started_at";
 
 // === Game Balance ===
@@ -362,41 +374,64 @@ public entry fun wake_up_pet(pet: &mut Pet, clock: &Clock) {
 }
 
 #[allow(lint(public_entry))]
-public entry fun mint_accessory(ctx: &mut TxContext) {
+public entry fun mint_accessory(accessory_type: String, ctx: &mut TxContext) {
+
+    let (name, image_url) = if (accessory_type == string::utf8(b"blangkon")) {
+        (string::utf8(b"blangkon"), string::utf8(ACCESSORY_BLANGKON_IMAGE_URL))
+    } else if (accessory_type == string::utf8(b"necklace")) {
+        (string::utf8(b"necklace"), string::utf8(ACCESSORY_NECKLACE_IMAGE_URL))
+    } else {
+        (string::utf8(b"cool glasses"), string::utf8(ACCESSORY_GLASSES_IMAGE_URL))
+    };
+
     let accessory = PetAccessory {
         id: object::new(ctx),
-        name: string::utf8(b"cool glasses"),
-        image_url: string::utf8(ACCESSORY_GLASSES_IMAGE_URL)
+        name,
+        image_url
     };
     transfer::public_transfer(accessory, ctx.sender());
 }
 
 #[allow(lint(public_entry))]
-public entry fun equip_accessory(pet: &mut Pet, accessory: PetAccessory) {
+public entry fun equip_accessory(pet: &mut Pet, accessory: PetAccessory, slot: String) {
     assert!(!is_sleeping(pet), E_PET_IS_ASLEEP);
 
-    let key = string::utf8(EQUIPPED_ITEM_KEY);
+    let is_valid_slot = slot == string::utf8(b"head") || slot == string::utf8(b"neck") || slot == string::utf8(b"eyes");
+    assert!(is_valid_slot, E_ITEM_ALREADY_EQUIPPED);
+
+    let key = if (slot == string::utf8(b"head")) {
+        string::utf8(EQUIPPED_HEAD_KEY)
+    } else if (slot == string::utf8(b"neck")) {
+        string::utf8(EQUIPPED_NECK_KEY)
+    } else {
+        string::utf8(EQUIPPED_EYES_KEY)
+    };
+
     assert!(!dynamic_field::exists_<String>(&pet.id, copy key), E_ITEM_ALREADY_EQUIPPED);
 
-    // Add accessory to pet
     dynamic_field::add(&mut pet.id, key, accessory);
-    // Update image
     update_pet_image(pet);
     emit_action(pet, b"equipped_item");
 }
 
 #[allow(lint(public_entry))]
-public entry fun unequip_accessory(pet: &mut Pet, ctx: &mut TxContext) {
+public entry fun unequip_accessory(pet: &mut Pet, slot: String, ctx: &mut TxContext) {
     assert!(!is_sleeping(pet), E_PET_IS_ASLEEP);
 
-    let key = string::utf8(EQUIPPED_ITEM_KEY);
+    let is_valid_slot = slot == string::utf8(b"head") || slot == string::utf8(b"neck") || slot == string::utf8(b"eyes");
+    assert!(is_valid_slot, E_NO_ITEM_EQUIPPED);
+
+    let key = if (slot == string::utf8(b"head")) {
+        string::utf8(EQUIPPED_HEAD_KEY)
+    } else if (slot == string::utf8(b"neck")) {
+        string::utf8(EQUIPPED_NECK_KEY)
+    } else {
+        string::utf8(EQUIPPED_EYES_KEY)
+    };
+
     assert!(dynamic_field::exists_<String>(&pet.id, key), E_NO_ITEM_EQUIPPED);
-
-    // Remove accessory
     let accessory: PetAccessory = dynamic_field::remove<String, PetAccessory>(&mut pet.id, key);
-    // Update image
     update_pet_image(pet);
-
     transfer::transfer(accessory, ctx.sender());
     emit_action(pet, b"unequipped_item");
 }
@@ -413,23 +448,47 @@ fun emit_action(pet: &Pet, action: vector<u8>) {
 }
 
 fun update_pet_image(pet: &mut Pet) {
-    let key = string::utf8(EQUIPPED_ITEM_KEY);
-    let has_accessory = dynamic_field::exists_<String>(&pet.id, key);
+    let has_head = dynamic_field::exists_<String>(&pet.id, string::utf8(EQUIPPED_HEAD_KEY));
+    let has_neck = dynamic_field::exists_<String>(&pet.id, string::utf8(EQUIPPED_NECK_KEY));
+    let has_eyes = dynamic_field::exists_<String>(&pet.id, string::utf8(EQUIPPED_EYES_KEY));
 
     if (pet.game_data.level == 1) {
-        if (has_accessory) {
+        // Kombinasi 3 aksesori
+        if (has_head && has_neck && has_eyes) {
+            pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_WITH_BLANGKON_NECKLACE_GLASSES_URL);
+        }
+        // Kombinasi 2 aksesori
+        else if (has_head && has_neck) {
+            pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_WITH_BLANGKON_NECKLACE_URL);
+        }
+        else if (has_head && has_eyes) {
+            pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_WITH_BLANGKON_GLASSES_URL);
+        }
+        else if (has_neck && has_eyes) {
+            pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_WITH_NECKLACE_GLASSES_URL);
+        }
+        // Satu aksesori
+        else if (has_head) {
+            pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_WITH_BLANGKON_URL);
+        }
+        else if (has_neck) {
+            pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_WITH_NECKLACE_URL);
+        }
+        else if (has_eyes) {
             pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_WITH_GLASSES_URL);
-        } else {
+        }
+        // Tidak ada aksesori
+        else {
             pet.image_url = string::utf8(PET_LEVEL_1_IMAGE_URL);
         }
     } else if (pet.game_data.level == 2) {
-        if (has_accessory) {
+        if (has_eyes) {
             pet.image_url = string::utf8(PET_LEVEL_2_IMAGE_WITH_GLASSES_URL);
         } else {
             pet.image_url = string::utf8(PET_LEVEL_2_IMAGE_URL);
         }
     } else if (pet.game_data.level >= 3) {
-        if (has_accessory) {
+        if (has_eyes) {
             pet.image_url = string::utf8(PET_LEVEL_3_IMAGE_WITH_GLASSES_URL);
         } else {
             pet.image_url = string::utf8(PET_LEVEL_3_IMAGE_URL);

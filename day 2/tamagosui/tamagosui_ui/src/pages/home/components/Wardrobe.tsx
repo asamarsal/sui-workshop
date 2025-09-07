@@ -1,4 +1,4 @@
-import { GlassesIcon, Loader2Icon, WarehouseIcon } from "lucide-react";
+import { GlassesIcon, Loader2Icon, WarehouseIcon, HardHat } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
@@ -21,7 +21,10 @@ export function WardrobeManager({
   isAnyActionPending,
 }: WardrobeManagerProps) {
   // --- Hooks for Actions ---
-  const { mutate: mutateMint, isPending: isMinting } = useMutateMintAccessory();
+  const { mutate: mintGlasses, isPending: isMintingGlasses } = useMutateMintAccessory();
+  const { mutate: mintBlangkon, isPending: isMintingBlangkon } = useMutateMintAccessory();
+  const { mutate: mintNecklace, isPending: isMintingNecklace } = useMutateMintAccessory();
+  
   const { mutate: mutateEquip, isPending: isEquipping } =
     UseMutateEquipAccessory();
   const { mutate: mutateUnequip, isPending: isUnequipping } =
@@ -34,7 +37,7 @@ export function WardrobeManager({
     useQueryEquippedAccessory({ petId: pet.id });
 
   // A specific loading state for wardrobe actions to disable buttons.
-  const isProcessingWardrobe = isMinting || isEquipping || isUnequipping;
+  const isProcessingWardrobe = isMintingGlasses || isMintingBlangkon || isMintingNecklace || isEquipping || isUnequipping;
   const isLoading = isLoadingAccessories || isLoadingEquipped;
 
   const renderContent = () => {
@@ -91,6 +94,12 @@ export function WardrobeManager({
               mutateEquip({
                 petId: pet.id,
                 accessoryId: ownedAccessories[0].id.id,
+                slot:
+                  ownedAccessories[0].name === "blangkon"
+                    ? "head"
+                    : ownedAccessories[0].name === "necklace"
+                    ? "neck"
+                    : "eyes",
               })
             }
             disabled={isAnyActionPending || isProcessingWardrobe}
@@ -106,18 +115,46 @@ export function WardrobeManager({
     }
     // Priority 4: If nothing is equipped and inventory is empty, show the "Mint" button.
     return (
-      <Button
-        onClick={() => mutateMint()}
-        disabled={isAnyActionPending || isProcessingWardrobe}
-        className="w-full cursor-pointer"
+      <div className="flex flex-col">
+        <Button
+        onClick={() => mintGlasses("glasses")}
+        disabled={isAnyActionPending || isMintingGlasses}
+        className="w-full cursor-pointer mb-2"
       >
-        {isMinting ? (
+        {isMintingGlasses ? (
           <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <GlassesIcon className="mr-2 h-4 w-4" />
         )}{" "}
-        Mint Cool Glasses
+        Mint Glasses
       </Button>
+
+      <Button
+        onClick={() => mintBlangkon("blangkon")}
+        disabled={isAnyActionPending || isMintingBlangkon}
+        className="w-full cursor-pointer mb-2 bg-blue-500 hover:bg-blue-700"
+      >
+        {isMintingBlangkon ? (
+          <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <HardHat className="mr-2 h-4 w-4" />
+        )}{" "}
+        Mint Blangkon
+      </Button>
+
+      <Button
+        onClick={() => mintNecklace("necklace")}
+        disabled={isAnyActionPending || isMintingNecklace}
+        className="w-full cursor-pointer mb-2 bg-yellow-500 hover:bg-yellow-600"
+      >
+        {isMintingNecklace ? (
+          <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <HardHat className="mr-2 h-4 w-4" />
+        )}{" "}
+        Mint Necklace
+      </Button>
+      </div>
     );
   };
 
